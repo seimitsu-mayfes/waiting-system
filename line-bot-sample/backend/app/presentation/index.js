@@ -13,17 +13,64 @@ app.get("/", (req, res) => {
 
 app.post("/webhook", function (req, res) {
     res.send("HTTP POST request sent to the webhook URL!");
+
+    const event = req.body.events[0];
     // ユーザーがボットにメッセージを送った場合、応答メッセージを送る
-    if (req.body.events[0].type === "message") {
+    if (event.type === "message" && event.message.type === "text") {
+        const userMessage = event.message.text;
+
+        let replyMessage = {};
+        if (userMessage === "待ち時間を確認") {
+            // Flex Messageを定義
+            replyMessage = {
+                type: "flex",
+                altText: "待ち時間情報",
+                contents: {
+                    type: "bubble",
+                    hero: {
+                        type: "image",
+                        url: "https://example.com/waiting-time-image.png", // 画像URLを指定
+                        size: "full",
+                        aspectRatio: "20:13",
+                        aspectMode: "cover",
+                    },
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                text: "現在の待ち時間",
+                                weight: "bold",
+                                size: "xl",
+                                align: "center",
+                            },
+                            {
+                                type: "text",
+                                text: "30分",
+                                size: "lg",
+                                align: "center",
+                                margin: "md",
+                                color: "#FF0000", // テキストの色
+                            },
+                        ],
+                    },
+                },
+            };
+        } else {
+            // デフォルトのテキストメッセージ
+            replyMessage = {
+                type: "text",
+                text: "Hello, user! May I help you?",
+            };
+        }
+
         // APIサーバーに送信する応答トークンとメッセージデータを文字列化する
         const dataString = JSON.stringify({
             // 応答トークンを定義
-            replyToken: req.body.events[0].replyToken,
+            replyToken: event.replyToken,
             // 返信するメッセージを定義
-            messages: [
-                { type: "text", text: "Hello, user" },
-                { type: "text", text: "May I help you?" },
-            ],
+            messages: [replyMessage],
         });
 
         // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
@@ -33,7 +80,7 @@ app.post("/webhook", function (req, res) {
         };
 
         // Node.jsドキュメントのhttps.requestメソッドで定義されている仕様に従ったオプションを指定します。
-        const webhookOptions = {
+        const reply = {
             hostname: "api.line.me",
             path: "/v2/bot/message/reply",
             method: "POST",
@@ -41,11 +88,11 @@ app.post("/webhook", function (req, res) {
         };
 
         // messageタイプのHTTP POSTリクエストが/webhookエンドポイントに送信された場合、
-        // 変数webhookOptionsで定義したhttps://api.line.me/v2/bot/message/replyに対して
+        // 変数replyで定義したhttps://api.line.me/v2/bot/message/replyに対して
         // HTTP POSTリクエストを送信します。
 
         // リクエストの定義
-        const request = https.request(webhookOptions, (res) => {
+        const request = https.request(reply, (res) => {
             res.on("data", (d) => {
                 process.stdout.write(d);
             });
