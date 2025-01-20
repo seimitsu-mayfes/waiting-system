@@ -4,6 +4,14 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
+import { MessageUseCase } from "../usecase/messageUseCase.js";
+
+// ユースケースのインスタンスを生成
+const messageUseCase = new MessageUseCase({
+  repository: new Repository(),
+  service: new Service(),
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
