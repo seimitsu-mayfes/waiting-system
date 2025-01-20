@@ -1,5 +1,5 @@
 // ユースケースの雛形
-export class UseCase {
+export class MessageUseCase {
   constructor({ repository, service }) {
     this.repository = repository; // データ層への依存
     this.service = service; // 外部サービスへの依存
