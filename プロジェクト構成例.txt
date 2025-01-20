@@ -1,0 +1,45 @@
+line-bot-sample/  ← プロジェクトのルート
+├── backend/       ← バックエンド（Node.js + Express）
+│   ├── presentation/  ← Webhook処理やAPIエンドポイント
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── middlewares/
+│   │   └── index.js
+│   ├── schema/         ← データモデルやバリデーションスキーマ
+│   │   ├── models.js
+│   │   ├── validation.js
+│   │   └── database.js
+│   ├── usecase/        ← ビジネスロジック
+│   │   ├── messageUseCase.js
+│   │   ├── userUseCase.js
+│   │   └── ...
+│   ├── config/         ← 環境変数や設定ファイル
+│   │   ├── dotenv.js
+│   │   ├── config.js
+│   │   └── lineConfig.js
+│   ├── package.json    ← backend用のnpmパッケージ管理
+│   ├── package-lock.json
+│   ├── .env            ← 環境変数（APIキーなど）
+│   ├── server.js       ← アプリケーションエントリポイント
+│   └── node_modules/   ← backend用の依存ライブラリ
+│
+├── frontend/      ← フロントエンド（React, Vue, Svelte など）
+│   ├── public/         ← 静的ファイル（HTML, CSS, 画像）
+│   ├── src/            ← フロントエンドのソースコード
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── store/
+│   │   ├── services/
+│   │   ├── App.js
+│   │   ├── main.js (または index.js)
+│   │   └── ...
+│   ├── package.json    ← frontend用のnpmパッケージ管理
+│   ├── package-lock.json
+│   ├── vite.config.js  ← Vite用設定（React/Vue/Svelteの場合）
+│   ├── webpack.config.js ← Webpack用設定（必要な場合）
+│   ├── .env            ← 環境変数（フロントエンドAPIキーなど）
+│   └── node_modules/   ← frontend用の依存ライブラリ
+│
+├── .gitignore
+├── README.md
+└── docker-compose.yml  ← Dockerを使う場合

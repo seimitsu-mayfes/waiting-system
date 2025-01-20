@@ -1,5 +1,5 @@
 // ユースケースの雛形
-class UseCase {
+export class MessageUseCase {
   constructor({ repository, service }) {
     this.repository = repository; // データ層への依存
     this.service = service; // 外部サービスへの依存
@@ -25,6 +25,7 @@ class UseCase {
       await this.repository.updateData(input.id, result);
 
       // 5. 結果を返却
+      console.log("UseCase execution succeeded:", result);
       return { success: true, result };
     } catch (error) {
       console.error("UseCase execution failed:", error);
