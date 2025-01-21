@@ -15,3 +15,6 @@
 “token_type”:“Bearer”,
 “expires_in”:2592000,
 “key_id”:“aMVOOkemrpNW8hVc59HIsA”
+
+[node_modulesの導入]
+node_modulesを各自で導入してください。backend下で、「$npm install」を実行。
