@@ -5,6 +5,29 @@ export class MessageUseCase {
     this.service = service; // 外部サービスへの依存
   }
 
+  async calc_waiting_time(input) {
+    try {
+      // 1. 入力の検証
+      this.validateInput(input);
+
+      // 2. 必要なデータの取得
+      const data = await this.repository.getData(input.id);
+
+      // 3. ビジネスロジックの実行
+      const result = this.service.performOperation(data);
+
+      // 4. 必要に応じてデータの更新
+      await this.repository.updateData(input.id, result);
+
+      // 5. 結果を返却
+      console.log("UseCase execution succeeded:", result);
+      return { success: true, result };
+    } catch (error) {
+      console.error("UseCase execution failed:", error);
+      return { success: false, error: error.message };
+    }
+  }
+
   /**
    * メインの処理を実行するメソッド
    * @param {Object} input - ユースケースへの入力
@@ -45,7 +68,7 @@ export class MessageUseCase {
 }
 
 // サンプル: レポジトリの実装例
-class Repository {
+export class Repository {
   async getData(id) {
     // データベースや外部APIからデータを取得する処理
     return { id, value: "example data" };
@@ -58,7 +81,7 @@ class Repository {
 }
 
 // サンプル: サービスの実装例
-class Service {
+export class Service {
   performOperation(data) {
     // ビジネスロジックを実行
     return { ...data, value: data.value.toUpperCase() };
@@ -66,13 +89,13 @@ class Service {
 }
 
 // 使用例
-(async () => {
-  const repository = new Repository();
-  const service = new Service();
-  const useCase = new UseCase({ repository, service });
+// (async () => {
+//   const repository = new Repository();
+//   const service = new Service();
+//   const useCase = new UseCase({ repository, service });
 
-  const input = { id: "123" };
-  const result = await useCase.execute(input);
+//   const input = { id: "123" };
+//   const result = await useCase.execute(input);
 
-  console.log("UseCase Result:", result);
-})();
+//   console.log("UseCase Result:", result);
+// })();

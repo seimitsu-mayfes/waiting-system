@@ -1,10 +1,21 @@
-const https = require("https");
-const express = require("express");
+import https from "https";
+import express from "express";
 const app = express();
-const PORT = process.env.PORT || 10000;
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
 import { MessageUseCase } from "../usecase/messageUseCase.js";
+import { Repository } from "../usecase/messageUseCase.js";
+import { Service } from "../usecase/messageUseCase.js";
+
+//データベースが正常に接続されているか確認
+import pool from "../infrastructure/database.js";
+pool.query("SELECT NOW()", (err, res) => {
+  if (err) {
+    console.error("Database connection error", err);
+  } else {
+    console.log("Database connected!", res.rows);
+  }
+});
 
 // ユースケースのインスタンスを生成
 const messageUseCase = new MessageUseCase({
@@ -15,9 +26,9 @@ const messageUseCase = new MessageUseCase({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.sendStatus(200);
-});
+// app.get("/", (req, res) => {
+//   res.sendStatus(200);
+// });
 
 app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL!");
@@ -75,8 +86,4 @@ app.post("/webhook", function (req, res) {
     request.write(dataString);
     request.end();
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
 });

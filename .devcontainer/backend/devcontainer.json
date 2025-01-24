@@ -1,0 +1,9 @@
+{
+  "name": "LineBot Backend Container",
+  "dockerComposeFile": "../../line-bot-sample/backend/docker-compose.yml",
+  "service": "linebot_backend",
+  "workspaceFolder": "../../line-bot-sample:/workspace",
+  "customizations": {
+    "extensions": ["github.copilot"]
+  }
+}
