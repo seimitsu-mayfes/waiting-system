@@ -1,7 +1,6 @@
 import https from "https";
 import express from "express";
 const app = express();
-const PORT = process.env.PORT || 10000;
 const TOKEN = process.env.LINE_ACCESS_TOKEN;
 
 import { MessageUseCase } from "../usecase/messageUseCase.js";
@@ -27,9 +26,9 @@ const messageUseCase = new MessageUseCase({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.sendStatus(200);
-});
+// app.get("/", (req, res) => {
+//   res.sendStatus(200);
+// });
 
 app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL!");
@@ -87,8 +86,4 @@ app.post("/webhook", function (req, res) {
     request.write(dataString);
     request.end();
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
 });

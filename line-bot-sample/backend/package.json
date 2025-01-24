@@ -12,8 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@line/bot-sdk": "^9.5.0",
+    "@prisma/client": "^6.2.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "prisma": "^6.2.1"
   }
 }

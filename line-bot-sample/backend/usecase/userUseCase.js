@@ -1,4 +1,4 @@
-import pool from "../infrastructure/database.js";
+import pool from "../database.js";
 
 async function getUsers() {
   try {
