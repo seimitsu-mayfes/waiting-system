@@ -18,6 +18,8 @@ services:
     container_name: linebot_backend
     restart: always
     build: .
+    volumes:
+      - ../../:/workspace
     depends_on:
       - db
     environment:
