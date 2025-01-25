@@ -11,9 +11,9 @@ import { Service } from "../usecase/messageUseCase.js";
 import pool from "../infrastructure/database.js";
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
-    console.error("Database connection error", err);
+    console.error("❌ Database connection error", err);
   } else {
-    console.log("Database connected!", res.rows);
+    console.log("✅ Database connected!", res.rows);
   }
 });
 

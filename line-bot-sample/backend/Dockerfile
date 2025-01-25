@@ -1,5 +1,5 @@
 FROM node:18
-WORKDIR /app
+WORKDIR /workspace/line-bot-sample/backend
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
