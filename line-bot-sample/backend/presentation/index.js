@@ -1,11 +1,32 @@
 import https from "https";
 import express from "express";
-const app = express();
-const TOKEN = process.env.LINE_ACCESS_TOKEN;
+import axios from "axios";
+import { PrismaClient } from '@prisma/client';
 
+//Prismaのインスタンスを生成
+const prisma = new PrismaClient();
+
+//expressのインスタンスを生成
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//dotenvを使用して環境変数を取得
+import dotenv from "dotenv";
+dotenv.config({ path: "../.env" });
+
+//LINEのアクセストークンを環境変数から取得
+const LINE_ACCESS_TOKEN = process.env.LINE_ACCESS_TOKEN;
+
+//ユースケースのインスタンスを生成
 import { MessageUseCase } from "../usecase/messageUseCase.js";
 import { Repository } from "../usecase/messageUseCase.js";
 import { Service } from "../usecase/messageUseCase.js";
+const messageUseCase = new MessageUseCase({
+  repository: new Repository(),
+  service: new Service(),
+});
+
 
 //データベースが正常に接続されているか確認
 import pool from "../infrastructure/database.js";
@@ -17,22 +38,68 @@ pool.query("SELECT NOW()", (err, res) => {
   }
 });
 
-// ユースケースのインスタンスを生成
-const messageUseCase = new MessageUseCase({
-  repository: new Repository(),
-  service: new Service(),
+//メッセージを送信してきたユーザーの情報を取得し、データベース上に保存
+//
+//
+app.post("/webhook", async (req, res) => {
+  const events = req.body.events;
+  for (const event of events) {
+    if (event.type === "message") {
+      const userId = event.source.userId;
+      console.log(`📩 ユーザーID: ${userId}`);
+
+      // ユーザー情報を取得
+      const profile = await getUserProfile(userId);
+      console.log("👤 ユーザープロフィール:", profile);
+
+      // ユーザー情報をデータベースに保存
+      if (profile) {
+        await createProfile(profile);
+      }
+    }
+  }
+  res.sendStatus(200);
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+async function getUserProfile(userId) {
+  try {
+    const response = await axios.get(`https://api.line.me/v2/bot/profile/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${LINE_ACCESS_TOKEN}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ ユーザー情報の取得エラー:", error.response ? error.response.data : error.message);
+  }
+}
 
-// app.get("/", (req, res) => {
-//   res.sendStatus(200);
-// });
+async function createProfile(profile) {
+  try {
+    const newProfile = await prisma.profile.create({
+      data: {
+        displayName: profile.displayName,
+        userId: profile.userId,
+        language: profile.language || "en", // デフォルトは 'en'
+        pictureUrl: profile.pictureUrl || "", // 画像URL
+        statusMessage: profile.statusMessage || "", // ステータスメッセージ
+      },
+    });
 
+    console.log("Profile created:", newProfile);
+  } catch (error) {
+    console.error("❌ プロフィール作成エラー:", error.message);
+  }
+}
+//
+//
+//
+
+// ユーザーがボットにメッセージを送信した場合、応答メッセージを送信する
+//
+//
 app.post("/webhook", function (req, res) {
   res.send("HTTP POST request sent to the webhook URL");
-  // ユーザーがボットにメッセージを送った場合、応答メッセージを送る
   if (req.body.events[0].type === "message") {
     let reply_content;
     if (req.body.events[0].type.body === "待ち時間を確認") {
@@ -53,7 +120,7 @@ app.post("/webhook", function (req, res) {
     // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
     const headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + TOKEN,
+      Authorization: `Bearer ${LINE_ACCESS_TOKEN}`,
     };
 
     // Node.jsドキュメントのhttps.requestメソッドで定義されている仕様に従ったオプションを指定します。
@@ -87,3 +154,6 @@ app.post("/webhook", function (req, res) {
     request.end();
   }
 });
+//
+//
+//
