@@ -1,4 +1,4 @@
-import pool from "../database.js";
+const pool = require("../infrastructure/database.js");
 
 async function getUsers() {
   try {

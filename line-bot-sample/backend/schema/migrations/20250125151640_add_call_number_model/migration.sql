@@ -12,5 +12,13 @@ CREATE TABLE "Profile" (
     CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "CallNumber" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "number" INTEGER NOT NULL DEFAULT 1,
+
+    CONSTRAINT "CallNumber_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
