@@ -1,5 +1,5 @@
 // ユースケースの雛形
-export class MessageUseCase {
+class MessageUseCase {
   constructor({ repository, service }) {
     this.repository = repository; // データ層への依存
     this.service = service; // 外部サービスへの依存
@@ -68,7 +68,7 @@ export class MessageUseCase {
 }
 
 // サンプル: レポジトリの実装例
-export class Repository {
+class Repository {
   async getData(id) {
     // データベースや外部APIからデータを取得する処理
     return { id, value: "example data" };
@@ -81,7 +81,7 @@ export class Repository {
 }
 
 // サンプル: サービスの実装例
-export class Service {
+class Service {
   performOperation(data) {
     // ビジネスロジックを実行
     return { ...data, value: data.value.toUpperCase() };

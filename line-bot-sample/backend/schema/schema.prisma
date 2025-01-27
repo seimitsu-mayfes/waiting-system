@@ -18,3 +18,8 @@ model Profile {
   createdAt     DateTime @default(now())             // 作成日
   updatedAt     DateTime @updatedAt                  // 更新日
 }
+
+model CallNumber {
+  id        Int  @id @default(1) // 常に1つのレコードのみを扱う
+  number    Int  @default(1)     // 呼出番号、初期値は1
+}
