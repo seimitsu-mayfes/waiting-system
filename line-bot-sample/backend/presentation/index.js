@@ -57,7 +57,7 @@ app.post("/webhook", async (req, res) => {
         try {
           // ユーザーの待ち時間を取得
           const time = await getEstimatedTime(userId);
-          
+
           if (time !== null) {
             reply_content = `現在の待ち時間は ${time} 分です。`;
           } else {
@@ -91,7 +91,6 @@ app.post("/webhook", async (req, res) => {
         } else {
           reply_content = "ユーザー情報を取得できませんでした。";
         }
-
       } else {
         reply_content = "無効なメッセージです。";
       }
@@ -141,7 +140,7 @@ module.exports = app;
 // app.post("/webhook", async (req, res) => {
 //   try {
 //     const event = req.body.events[0];
-    
+
 //     if (event.type === "message" && event.message.text === "整理券を発行") {
 //       const userId = event.source.userId;
 //       console.log(`📩 ユーザーID: ${userId}`);
@@ -171,8 +170,6 @@ module.exports = app;
 //     res.sendStatus(500);
 //   }
 // });
-
-
 
 // ユーザーがボットにメッセージを送信した場合、応答メッセージを送信する
 // app.post("/webhook", function (req, res) {
@@ -239,7 +236,6 @@ module.exports = app;
 //   }
 // });
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,16 +280,16 @@ async function createProfile(profile) {
 }
 
 //呼出番号をインクリメントする関数
-// async function incrementCallNumber() {
-//   const callNumber = await prisma.callNumber.upsert({
-//     where: { id: 1 },
-//     update: { number: { increment: 1 } },
-//     create: { id: 1, number: 1 },
-//   });
+async function incrementCallNumber() {
+  const callNumber = await prisma.callNumber.upsert({
+    where: { id: 1 },
+    update: { number: { increment: 1 } },
+    create: { id: 1, number: 1 },
+  });
 
-//   console.log("Updated Call Number:", callNumber.number);
-//   return callNumber.number;
-// }
+  console.log("Updated Call Number:", callNumber.number);
+  return callNumber.number;
+}
 
 // incrementCallNumber()
 //   .catch((e) => console.error(e))
@@ -330,10 +326,11 @@ async function getEstimatedTime(userId) {
     }
 
     // 差を計算
-    const gain = 1.5; // 1つの呼出番号の差が1.5分と仮定
+    const gain = 1.5;
+    //20組前を呼び出した時間と現在の呼出番号を呼び出した時間の差を取る。
+    //その差を20で割って、(callNumber.number - profile.id)を掛けることで、現在の待ち時間を算出する。
     const difference = roundUp((callNumber.number - profile.id) * gain);
     return difference;
-
   } catch (error) {
     console.error("❌ エラー:", error.message);
     return null;
