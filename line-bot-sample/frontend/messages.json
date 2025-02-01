@@ -1,0 +1,168 @@
+{
+    "reservationMessage": {
+      "type": "flex",
+      "altText": "予約する企画を選んでください",
+      "contents": {
+        "type": "carousel",
+        "contents": [
+          {
+            "type": "bubble",
+            "hero": {
+              "type": "image",
+              "url": "/images/ar_block_breaker.png",
+              "size": "full",
+              "aspectRatio": "16:9",
+              "aspectMode": "cover"
+            },
+            "body": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "text", "text": "ARブロック崩し", "weight": "bold", "size": "xl", "align": "center" }
+              ]
+            },
+            "footer": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "button", "action": { "type": "message", "label": "予約する", "text": "ARブロック崩し" }, "style": "primary" }
+              ]
+            }
+          },
+          {
+            "type": "bubble",
+            "hero": {
+              "type": "image",
+              "url": "/images/vr_ball_toss.png",
+              "size": "full",
+              "aspectRatio": "16:9",
+              "aspectMode": "cover"
+            },
+            "body": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "text", "text": "VR玉入れ", "weight": "bold", "size": "xl", "align": "center" }
+              ]
+            },
+            "footer": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "button", "action": { "type": "message", "label": "予約する", "text": "VR玉入れ" }, "style": "primary" }
+              ]
+            }
+          },
+          {
+            "type": "bubble",
+            "hero": {
+              "type": "image",
+              "url": "/images/self_driving_car_race.jpg",
+              "size": "full",
+              "aspectRatio": "16:9",
+              "aspectMode": "cover"
+            },
+            "body": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "text", "text": "自動運転カーレース", "weight": "bold", "size": "xl", "align": "center" }
+              ]
+            },
+            "footer": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "button", "action": { "type": "message", "label": "予約する", "text": "自動運転カーレース" }, "style": "primary" }
+              ]
+            }
+          },
+          {
+            "type": "bubble",
+            "hero": {
+              "type": "image",
+              "url": "/images/drone_shooting.jpg",
+              "size": "full",
+              "aspectRatio": "16:9",
+              "aspectMode": "cover"
+            },
+            "body": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "text", "text": "ドローンシューティング", "weight": "bold", "size": "xl", "align": "center" }
+              ]
+            },
+            "footer": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                { "type": "button", "action": { "type": "message", "label": "予約する", "text": "ドローンシューティング" }, "style": "primary" }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "waitingTimeMessage": {
+        "type": "flex",
+        "altText": "待ち時間をお知らせします",
+        "contents": {
+        "type": "carousel",
+        "contents": [
+            {
+            "type": "bubble",
+            "header": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": "ARブロック崩し",
+                    "weight": "bold",
+                    "size": "xxl",
+                    "align": "center"
+                }
+                ]
+            },
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": "吉田大靖 さん",
+                    "align": "center",
+                    "wrap": true,
+                    "size": "xl",
+                    "weight": "regular"
+                },
+                {
+                    "type": "text",
+                    "text": "の推定待ち時間は",
+                    "align": "center"
+                },
+                {
+                    "type": "text",
+                    "text": "50",
+                    "size": "5xl",
+                    "align": "center",
+                    "weight": "regular"
+                },
+                {
+                    "type": "text",
+                    "text": "分です。",
+                    "align": "end",
+                    "position": "relative",
+                    "margin": "none",
+                    "size": "xl"
+                }
+                ]
+            }
+            }
+        ]
+        }
+    }
+      
+}
+  
