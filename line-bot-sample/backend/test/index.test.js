@@ -2,20 +2,13 @@ const request = require("supertest");
 const { app, getEstimatedTime, getUserProfile, createProfile } = require("../presentation/index");
 const { PrismaClient } = require("@prisma/client");
 const dotenv = require("dotenv");
-const path = require("path");
 
-// テスト用の環境変数を読み込む
-process.env.NODE_ENV = 'test';
-dotenv.config({ path: path.join(__dirname, '.env') });
+// .envファイルの読み込み
+dotenv.config({ path: "../.env" });
+process.env.NODE_ENV = "test";
 
 // Prismaクライアントの設定
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL
-    }
-  }
-});
+const prisma = new PrismaClient();
 
 // axiosのモック
 jest.mock("axios", () => ({

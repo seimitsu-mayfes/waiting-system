@@ -5,7 +5,7 @@
   "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
-      "extensions": ["github.copilot"]
+      "extensions": ["github.copilot", "Prisma.prisma"]
     }
   }
 }

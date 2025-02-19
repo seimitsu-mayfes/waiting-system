@@ -73,6 +73,8 @@ async function getEstimatedTime(userId) {
     }
 
     const gain = 1.5;
+    //20組前を呼び出した時間と現在の呼出番号を呼び出した時間の差を取る。
+    //その差を20で割って、(callNumber.number - profile.id)を掛けることで、現在の待ち時間を算出する。
     const difference = Math.ceil((callNumber.number - profile.id) * gain);
     return Math.max(0, difference);
   } catch (error) {
@@ -92,7 +94,7 @@ module.exports = {
   getEstimatedTime,
   getUserProfile,
   createProfile,
-  LINE_ACCESS_TOKEN
+  LINE_ACCESS_TOKEN,
 };
 
 //ユースケースのインスタンスを生成
@@ -103,7 +105,7 @@ module.exports = {
 // });
 
 // テスト時は不要なデータベース接続チェックをスキップ
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== "test") {
   const pool = require("../infrastructure/database.js");
   pool.query("SELECT NOW()", (err, res) => {
     if (err) {
@@ -211,113 +213,6 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-
-//「整理券を発行」と送信してきたユーザーの情報を取得し、データベース上に保存。すでにあれば保存しない。
-// app.post("/webhook", async (req, res) => {
-//   try {
-//     const event = req.body.events[0];
-
-//     if (event.type === "message" && event.message.text === "整理券を発行") {
-//       const userId = event.source.userId;
-//       console.log(`📩 ユーザーID: ${userId}`);
-
-//       // ユーザー情報を取得
-//       const profile = await getUserProfile(userId);
-//       console.log("👤 ユーザープロフィール:", profile);
-
-//       if (profile) {
-//         // ユーザーがすでに登録されているか確認
-//         const existingProfile = await prisma.profile.findUnique({
-//           where: { userId },
-//         });
-
-//         if (!existingProfile) {
-//           // 新規ユーザーならデータベースに保存
-//           await createProfile(profile);
-//           console.log("✅ プロフィールを保存しました");
-//         } else {
-//           console.log("🔍 ユーザーはすでに登録済みです");
-//         }
-//       }
-//     }
-//     res.sendStatus(200);
-//   } catch (error) {
-//     console.error("❌ Webhookエラー:", error);
-//     res.sendStatus(500);
-//   }
-// });
-
-// ユーザーがボットにメッセージを送信した場合、応答メッセージを送信する
-// app.post("/webhook", function (req, res) {
-//   res.send("HTTP POST request sent to the webhook URL");
-
-//   const event = req.body.events[0];
-
-//   if (event.type === "message") {
-//     const userMessage = event.message.text;
-//     let reply_content;
-
-//     if (userMessage === "待ち時間を確認") {
-//       const time = getEstimatedTime(event.source.userId);
-//       reply_content = `現在の待ち時間は ${time} 分です。`;
-//     } else if (userMessage === "整理券を発行") {
-//       reply_content = "予約を行いました。あなたの予約番号は123456です。";
-//     } else {
-//       reply_content = "無効なメッセージです。";
-//     }
-//     // APIサーバーに送信する応答トークンとメッセージデータを文字列化する
-//     const dataString = JSON.stringify({
-//       // 応答トークンを定義
-//       replyToken: event.replyToken,
-//       // 返信するメッセージを定義
-//       messages: [{ type: "text", text: reply_content }],
-//     });
-
-//     // リクエストヘッダー。仕様についてはMessaging APIリファレンスを参照してください。
-//     const headers = {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${LINE_ACCESS_TOKEN}`,
-//     };
-
-//     // Node.jsドキュメントのhttps.requestメソッドで定義されている仕様に従ったオプションを指定します。
-//     const webhookOptions = {
-//       hostname: "api.line.me",
-//       path: "/v2/bot/message/reply",
-//       method: "POST",
-//       headers: headers,
-//     };
-
-//     // messageタイプのHTTP POSTリクエストが/webhookエンドポイントに送信された場合、
-//     // 変数webhookOptionsで定義したhttps://api.line.me/v2/bot/message/replyに対して
-//     // HTTP POSTリクエストを送信します。
-
-//     // リクエストの定義
-//     const request = https.request(webhookOptions, (res) => {
-//       res.on("data", (d) => {
-//         console.log("LINE API Response:", d.toString());
-//         // process.stdout.write(d);
-//       });
-//     });
-
-//     // エラーをハンドリング
-//     // request.onは、APIサーバーへのリクエスト送信時に
-//     // エラーが発生した場合にコールバックされる関数です。
-//     request.on("error", (err) => {
-//       console.error("❌ LINE API エラー:", err);
-//     });
-
-//     // 最後に、定義したリクエストを送信
-//     request.write(dataString);
-//     request.end();
-//   }
-// });
-
-// incrementCallNumber()
-//   .catch((e) => console.error(e))
-//   .finally(async () => {
-//     await prisma.$disconnect();
-//   });
-
 //呼出番号をインクリメントする関数
 async function incrementCallNumber() {
   const callNumber = await prisma.callNumber.upsert({
@@ -328,9 +223,4 @@ async function incrementCallNumber() {
 
   console.log("Updated Call Number:", callNumber.number);
   return callNumber.number;
-}
-
-// //数値を切り上げる関数
-function roundUp(value) {
-  return Math.ceil(value);
 }

@@ -8,6 +8,7 @@ CREATE TABLE "Profile" (
     "statusMessage" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "validity" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
 );
@@ -16,6 +17,8 @@ CREATE TABLE "Profile" (
 CREATE TABLE "CallNumber" (
     "id" INTEGER NOT NULL DEFAULT 1,
     "number" INTEGER NOT NULL DEFAULT 1,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "previousUpdateAt" TIMESTAMP(3),
 
     CONSTRAINT "CallNumber_pkey" PRIMARY KEY ("id")
 );
