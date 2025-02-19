@@ -1,0 +1,11 @@
+このディレクトリで初期化しようと思っても何故かうまくいかない
+
+一つ前のディレクトリに戻って
+cd ..
+
+以下を実行してmigrationsを作成して、
+npx prisma migrate dev --schema=./schema/schema.prisma --name init
+(devの部分は"開発用のデータベース"ということ)
+
+最後にクライアントをつくるとうまくいく
+npx prisma generate
