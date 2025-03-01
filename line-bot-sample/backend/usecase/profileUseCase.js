@@ -45,4 +45,4 @@ class profileUseCase {
 }
 
 // クラスをエクスポート
-module.exports = profileUseCase;
+module.exports = new profileUseCase();

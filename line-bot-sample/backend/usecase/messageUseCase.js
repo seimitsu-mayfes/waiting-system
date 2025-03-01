@@ -32,4 +32,4 @@ class messageUseCase {
 }
 
 // クラスをエクスポート
-module.exports = messageUseCase;
+module.exports = new messageUseCase();

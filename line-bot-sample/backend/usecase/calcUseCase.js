@@ -56,4 +56,4 @@ class calcUseCase {
 }
 
 // クラスをエクスポート
-module.exports = calcUseCase;
+module.exports = new calcUseCase();
