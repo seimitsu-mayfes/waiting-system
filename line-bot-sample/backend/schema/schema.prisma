@@ -24,5 +24,10 @@ model CallNumber {
   id                  Int      @id @default(1)             // 常に1つのレコードのみを扱う
   number              Int      @default(1)                 // 呼出番号、初期値は1
   updatedAt           DateTime @updatedAt                  // 更新日
-  previousUpdateAt    DateTime?                            // 20個前の番号の更新時間（オプション）
+}
+
+model CallHistory {
+  id                  Int      @id @default(autoincrement()) // ID は自動的にインクリメント
+  callNumber          Int                                   // 呼出番号
+  calledAt            DateTime @default(now())              // 呼出時間
 }
