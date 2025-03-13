@@ -160,12 +160,14 @@ app.delete("/webhook", async (req, res) => {
   try {
     const userId = req.query.userId;
     const profile = await prisma.profile.findUnique({
-      where: { userId },
+      where: { userId, validity: true },
     });
-    if (profile.validity === true) {
+    if (profile) {
       profileUseCase.invalidateProfile(profile.reservationNumber);
+      //ここに返信を作る
     } else {
-      console.log("この整理券は使用済みです。");
+      messageUseCase.sendLinePushMessage(userId, "整理券は使用済みです。");
+      //ここに返信を作る
     }
     res.sendStatus(200);
   } catch (error) {
