@@ -1,18 +1,18 @@
 const axios = require("axios");
 const { PrismaClient } = require("@prisma/client");
 
-class calcUseCase {
+class reservationUseCase {
   constructor() {
     this.prisma = new PrismaClient();
     this.LINE_ACCESS_TOKEN = process.env.LINE_ACCESS_TOKEN; // 環境変数から取得
   }
 
-  // 待ち時間を取得する関数
+  // あるユーザーの待ち時間を取得する関数
   async getEstimatedTime(userId) {
     try {
       const profile = await this.prisma.profile.findUnique({
-        where: { userId },
-        select: { id: true },
+        where: { userId: userId },
+        select: { reservationNumber: true },
       });
 
       if (!profile) {
@@ -29,8 +29,9 @@ class calcUseCase {
       }
 
       const gain = 1.5;
-      const difference = Math.ceil((callNumber.number - profile.id) * gain);
-      return Math.max(0, difference);
+      const difference = Math.ceil((profile.reservationNumber - callNumber.number) * gain);
+      console.log("Estimated Time:", difference);
+      return difference;
     } catch (error) {
       console.error("❌ エラー: ", error.message);
       return null;
@@ -53,7 +54,16 @@ class calcUseCase {
       throw error;
     }
   }
+
+  // 予約番号を取得する関数
+  async getNextReservationNumber() {
+    const result = await prisma.profile.aggregate({
+      _max: { reservationNumber: true }, // 最大値を取得
+    });
+  
+    return (result._max.reservationNumber || 0) + 1;
+  }
 }
 
 // クラスをエクスポート
-module.exports = new calcUseCase();
+module.exports = new reservationUseCase();

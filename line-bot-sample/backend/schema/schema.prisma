@@ -9,15 +9,16 @@ generator client {
 }
 
 model Profile {
-  id            Int      @id @default(autoincrement()) // ID は自動的にインクリメント
-  displayName   String                               // LINE display name
-  userId        String   @unique                     // LINE userId（ユニークな値）
-  language      String                               // 言語（例：en）
-  pictureUrl    String                               // プロフィール画像のURL
-  statusMessage String                               // ステータスメッセージ
-  createdAt     DateTime @default(now())             // 作成日
-  updatedAt     DateTime @updatedAt                  // 更新日
-  validity      Boolean  @default(true)              // デフォルトは有効
+  id                Int      @id @default(autoincrement()) // ID は自動的にインクリメント
+  reservationNumber Int      @unique                       // 整理券番号（ユニークな値）
+  displayName       String                                 // LINE display name
+  userId            String   @unique                       // LINE userId（ユニークな値）
+  language          String                                 // 言語（例：en）
+  pictureUrl        String                                 // プロフィール画像のURL
+  statusMessage     String                                 // ステータスメッセージ
+  createdAt         DateTime @default(now())               // 作成日
+  updatedAt         DateTime @updatedAt                    // 更新日
+  validity          Boolean  @default(true)                // デフォルトは有効
 }
 
 model CallNumber {

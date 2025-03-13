@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Profile" (
     "id" SERIAL NOT NULL,
+    "reservationNumber" INTEGER NOT NULL,
     "displayName" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "language" TEXT NOT NULL,
@@ -22,6 +23,9 @@ CREATE TABLE "CallNumber" (
 
     CONSTRAINT "CallNumber_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Profile_reservationNumber_key" ON "Profile"("reservationNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
