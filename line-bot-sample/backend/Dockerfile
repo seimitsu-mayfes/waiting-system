@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:latest
 WORKDIR /workspace/line-bot-sample/backend
 COPY package.json package-lock.json ./
 RUN npm install
