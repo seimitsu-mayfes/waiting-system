@@ -25,10 +25,11 @@ class profileUseCase {
     }
   }
 
-  // プロフィールを作成する関数
+  // profileデータベースを作成する関数
   async createProfile(profile) {
     try {
-      const newReservationNumber = await reservationUseCase.getNextReservationNumber();
+      const newReservationNumber =
+        await reservationUseCase.getNextReservationNumber();
 
       const newProfile = await this.prisma.profile.create({
         data: {

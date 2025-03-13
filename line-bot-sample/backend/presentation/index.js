@@ -23,6 +23,7 @@ module.exports = {
   app,
 };
 
+//整理券の発行&待ち時間の確認
 app.post("/webhook", async (req, res) => {
   try {
     const event = req.body.events[0];
@@ -38,7 +39,10 @@ app.post("/webhook", async (req, res) => {
         try {
           // ユーザーの待ち時間を取得
           const time = await reservationUseCase.getEstimatedTime(userId);
-          reply_content = time !== null ? `現在の待ち時間は ${time} 分です。` : "整理券を発行してください。";
+          reply_content =
+            time !== null
+              ? `現在の待ち時間は ${time} 分です。`
+              : "整理券を発行してください。";
         } catch (error) {
           console.error("❌ 待ち時間取得エラー:", error);
           reply_content = "待ち時間取得エラー";
@@ -51,7 +55,7 @@ app.post("/webhook", async (req, res) => {
         if (profile) {
           // ユーザーがすでに登録されているか確認
           const existingProfile = await prisma.profile.findUnique({
-            where: { userId },
+            where: { userId, validity: true },
           });
 
           if (!existingProfile) {
@@ -62,7 +66,7 @@ app.post("/webhook", async (req, res) => {
             reply_content = `予約を行いました。あなたの予約番号は ${reservationNumber} です。`;
           } else {
             console.log("🔍 ユーザーはすでに登録済みです");
-            reply_content = "あなたはすでに予約済みです。";
+            reply_content = "すでに予約済みです。";
           }
         } else {
           reply_content = "ユーザー情報を取得できませんでした。";
@@ -125,7 +129,6 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-
 //呼び出し番号をインクリメント＆呼出番号と同じ番号のユーザーに呼び出しメッセージを送信
 app.put("/webhook", async (req, res) => {
   try {
@@ -152,13 +155,14 @@ app.put("/webhook", async (req, res) => {
   }
 });
 
+//整理券を使用済みにする(validityをfalseに変更)
 app.delete("/webhook", async (req, res) => {
   try {
     const userId = req.query.userId;
     const profile = await prisma.profile.findUnique({
       where: { userId },
     });
-    if(profile.validity === true){
+    if (profile.validity === true) {
       profileUseCase.invalidateProfile(profile.reservationNumber);
     } else {
       console.log("この整理券は使用済みです。");
@@ -168,4 +172,4 @@ app.delete("/webhook", async (req, res) => {
     console.error("❌ Webhookエラー:", error);
     res.sendStatus(500);
   }
-});  
+});

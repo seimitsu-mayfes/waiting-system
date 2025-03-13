@@ -11,7 +11,7 @@ class reservationUseCase {
   async getEstimatedTime(userId) {
     try {
       const profile = await this.prisma.profile.findUnique({
-        where: { userId: userId },
+        where: { userId: userId, validity: true },
         select: { reservationNumber: true },
       });
 
@@ -29,7 +29,9 @@ class reservationUseCase {
       }
 
       const gain = 1.5;
-      const difference = Math.ceil((profile.reservationNumber - callNumber.number) * gain);
+      const difference = Math.ceil(
+        (profile.reservationNumber - callNumber.number) * gain
+      );
       console.log("Estimated Time:", difference);
       return difference;
     } catch (error) {
@@ -55,12 +57,12 @@ class reservationUseCase {
     }
   }
 
-  // 予約番号を取得する関数
+  // 整理券の発行を行ったユーザーに割り当てる予約番号を取得する関数
   async getNextReservationNumber() {
-    const result = await prisma.profile.aggregate({
+    const result = await this.prisma.profile.aggregate({
       _max: { reservationNumber: true }, // 最大値を取得
     });
-  
+
     return (result._max.reservationNumber || 0) + 1;
   }
 }
