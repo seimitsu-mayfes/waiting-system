@@ -33,7 +33,7 @@ class calcUseCase {
       // 呼出履歴を取得（最新のものから順に）
       const callHistory = await this.prisma.callHistory.findMany({
         orderBy: {
-          callNumber: 'desc',
+          callNumber: "desc",
         },
         take: 25, // 十分な履歴を取得（n=20の計算に必要な分）
       });
@@ -43,12 +43,13 @@ class calcUseCase {
         if (callHistory.length < 1) {
           // 初回呼出の場合は待ち時間なし
           return 0;
-        }
-        else {
+        } else {
           // 2回目以降の場合は、一つ目のの呼出からの経過時間を履歴の数で割って計算
           const lastCall = callHistory[0];
           const firstCall = callHistory[callHistory.length - 1];
-          const waitingtime = (lastCall.calledAt.getTime() - firstCall.calledAt.getTime()) / callHistory.length;
+          const waitingtime =
+            (lastCall.calledAt.getTime() - firstCall.calledAt.getTime()) /
+            callHistory.length;
           return Math.ceil(waitingtime / (1000 * 60));
         }
       }
@@ -65,13 +66,14 @@ class calcUseCase {
       }
 
       // 時間差を計算（ミリ秒）
-      const timeDifference = currentCall.calledAt.getTime() - nCallsAgo.calledAt.getTime();
+      const timeDifference =
+        currentCall.calledAt.getTime() - nCallsAgo.calledAt.getTime();
 
       // n個の呼出に要した平均時間（ミリ秒）を計算
       const averageTimePerCall = timeDifference / n;
 
       // ユーザーの前にある呼出数を計算
-      const callsAhead = callNumber.number - profile.id;
+      const callsAhead = profile.reservationNumber - callNumber.number;
 
       // 待ち時間を計算（ミリ秒を分に変換）
       const waitTimeMinutes = (callsAhead * averageTimePerCall) / (1000 * 60);
