@@ -12,8 +12,8 @@ describe("reservationUseCase", () => {
         displayName: "Test User",
         language: "ja",
         pictureUrl: "",
-        statusMessage: "",
-      },
+        statusMessage: ""
+      }
     });
     await prisma.callNumber.upsert({
       where: { id: 1 },

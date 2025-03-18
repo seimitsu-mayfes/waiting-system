@@ -19,9 +19,17 @@ CREATE TABLE "CallNumber" (
     "id" INTEGER NOT NULL DEFAULT 1,
     "number" INTEGER NOT NULL DEFAULT 1,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "previousUpdateAt" TIMESTAMP(3),
 
     CONSTRAINT "CallNumber_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CallHistory" (
+    "id" SERIAL NOT NULL,
+    "callNumber" INTEGER NOT NULL,
+    "calledAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "CallHistory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
