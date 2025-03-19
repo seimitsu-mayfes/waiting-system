@@ -102,31 +102,6 @@ router.post("/webhook", async (req, res) => {
   }
 });
 
-// 呼び出し番号をインクリメント＆ユーザーに通知
-router.put("/webhook", async (req, res) => {
-  try {
-    const callNumber = await reservationUseCase.incrementCallNumber();
-
-    const profile = await prisma.profile.findUnique({
-      where: { reservationNumber: callNumber },
-    });
-
-    if (profile) {
-      messageUseCase.sendLinePushMessage(
-        profile.userId,
-        `呼び出し番号: ${callNumber}`
-      );
-      console.log(`🔊 呼び出し番号: ${callNumber}`);
-    } else {
-      console.error("❌ プロフィールが見つかりません");
-    }
-    res.sendStatus(200);
-  } catch (error) {
-    console.error("❌ Webhookエラー:", error);
-    res.sendStatus(500);
-  }
-});
-
 // 整理券を使用済みにする
 router.delete("/webhook", async (req, res) => {
   try {

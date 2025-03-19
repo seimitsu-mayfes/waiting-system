@@ -2,6 +2,7 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const dotenv = require("dotenv");
 const messageUseCase = require("../usecase/messageUseCase");
+const reservationUseCase = require("../usecase/reservationUseCase"); // reservationUseCase をインポート
 
 dotenv.config();
 
@@ -20,21 +21,8 @@ const authenticate = (req, res, next) => {
 // 呼出番号をインクリメントするAPI
 router.put("/call", authenticate, async (req, res) => {
   try {
-    const incrementBy = req.body.incrementBy || 1;
-
-    // 現在の呼出番号を取得
-    let callNumber = await prisma.callNumber.findUnique({ where: { id: 1 } });
-
-    if (!callNumber) {
-      callNumber = await prisma.callNumber.create({ data: { id: 1, number: 1 } });
-    }
-
-    // 呼出番号を更新
-    const newCallNumber = callNumber.number + incrementBy;
-    await prisma.callNumber.update({
-      where: { id: 1 },
-      data: { number: newCallNumber },
-    });
+    // reservationUseCase の incrementCallNumber を使って呼出番号をインクリメント
+    const newCallNumber = await reservationUseCase.incrementCallNumber();
 
     // 該当ユーザーを取得
     const profile = await prisma.profile.findUnique({
