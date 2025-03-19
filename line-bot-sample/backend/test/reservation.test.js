@@ -1,11 +1,16 @@
 const request = require("supertest");
-const { app } = require("../presentation/index");
-const { PrismaClient } = require("@prisma/client");
+const express = require("express");
 const dotenv = require("dotenv");
+const { PrismaClient } = require("@prisma/client");
+const presentationRoutes = require("../presentation/reservation");
 
-// .envファイルの読み込み
-dotenv.config({ path: "../.env" });
-// process.env.NODE_ENV = "test";
+// 環境変数の読み込み
+dotenv.config();
+
+// テスト用のExpressアプリを作成
+const app = express();
+app.use(express.json());
+app.use(presentationRoutes);
 
 // Prismaクライアントの設定
 const prisma = new PrismaClient();
@@ -16,15 +21,12 @@ jest.mock("axios", () => ({
 }));
 
 describe("POST /webhook", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await prisma.profile.deleteMany();
     await prisma.callNumber.deleteMany();
-    await prisma.$connect();
   });
 
   afterAll(async () => {
-    await prisma.profile.deleteMany();
-    await prisma.callNumber.deleteMany();
     await prisma.$disconnect();
   });
 
@@ -57,6 +59,7 @@ describe("POST /webhook", () => {
       });
 
     expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({});
   });
 
   test("整理券を発行できる", async () => {
@@ -72,7 +75,7 @@ describe("POST /webhook", () => {
       });
 
     expect(response.status).toBe(200);
-
+    
     const profile = await prisma.profile.findUnique({
       where: { userId: "123" }
     });

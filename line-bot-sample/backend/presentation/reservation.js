@@ -8,23 +8,17 @@ const prisma = new PrismaClient();
 
 // dotenvを使用して環境変数を取得
 const dotenv = require("dotenv");
-dotenv.config({ path: "../.env" });
+dotenv.config(); // ルートディレクトリの `.env` を読むように修正
 
 const profileUseCase = require("../usecase/profileUseCase.js");
 const messageUseCase = require("../usecase/messageUseCase.js");
 const reservationUseCase = require("../usecase/reservationUseCase.js");
 
-// expressのインスタンスを生成
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// expressのルーターを作成
+const router = express.Router();
 
-module.exports = {
-  app,
-};
-
-//整理券の発行&待ち時間の確認
-app.post("/webhook", async (req, res) => {
+// 待ち時間の確認
+router.post("/webhook", async (req, res) => {
   try {
     const event = req.body.events[0];
     let reply_content;
@@ -37,7 +31,6 @@ app.post("/webhook", async (req, res) => {
 
       if (userMessage === "待ち時間を確認") {
         try {
-          // ユーザーの待ち時間を取得
           const time = await reservationUseCase.getEstimatedTime(userId);
           reply_content =
             time !== null
@@ -48,22 +41,18 @@ app.post("/webhook", async (req, res) => {
           reply_content = "待ち時間取得エラー";
         }
       } else if (userMessage === "整理券を発行") {
-        // ユーザー情報を取得
         const profile = await profileUseCase.getUserProfile(userId);
         console.log("👤 ユーザープロフィール:", profile);
 
         if (profile) {
-          // ユーザーがすでに登録されているか確認
           const existingProfile = await prisma.profile.findUnique({
             where: { userId, validity: true },
           });
 
           if (!existingProfile) {
-            // 新規ユーザーならデータベースに保存
             await profileUseCase.createProfile(profile);
             console.log("✅ プロフィールを保存しました");
-            const reservationNumber = profile.reservationNumber;
-            reply_content = `予約を行いました。あなたの予約番号は ${reservationNumber} です。`;
+            reply_content = `予約を行いました。あなたの予約番号は ${profile.reservationNumber} です。`;
           } else {
             console.log("🔍 ユーザーはすでに登録済みです");
             reply_content = "すでに予約済みです。";
@@ -76,22 +65,6 @@ app.post("/webhook", async (req, res) => {
       }
     }
 
-    // await axios.post(
-    //   "https://api.line.me/v2/bot/message/reply",
-    //   {
-    //     replyToken: event.replyToken,
-    //     messages: [{ type: "text", text: reply_content }],
-    //   },
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}`,
-    //     },
-    //   }
-    // );
-    // console.log("✅ LINE API レスポンス送信成功");
-
-    // LINE API に返信を送信
     const dataString = JSON.stringify({
       replyToken: event.replyToken,
       messages: [{ type: "text", text: reply_content }],
@@ -129,12 +102,11 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-//呼び出し番号をインクリメント＆呼出番号と同じ番号のユーザーに呼び出しメッセージを送信
-app.put("/webhook", async (req, res) => {
+// 呼び出し番号をインクリメント＆ユーザーに通知
+router.put("/webhook", async (req, res) => {
   try {
     const callNumber = await reservationUseCase.incrementCallNumber();
 
-    // ユーザーに呼び出しメッセージを送信
     const profile = await prisma.profile.findUnique({
       where: { reservationNumber: callNumber },
     });
@@ -155,19 +127,18 @@ app.put("/webhook", async (req, res) => {
   }
 });
 
-//整理券を使用済みにする(validityをfalseに変更)
-app.delete("/webhook", async (req, res) => {
+// 整理券を使用済みにする
+router.delete("/webhook", async (req, res) => {
   try {
     const userId = req.query.userId;
     const profile = await prisma.profile.findUnique({
       where: { userId, validity: true },
     });
+
     if (profile) {
-      profileUseCase.invalidateProfile(profile.reservationNumber);
-      //ここに返信を作る
+      await profileUseCase.invalidateProfile(profile.reservationNumber);
     } else {
       messageUseCase.sendLinePushMessage(userId, "整理券は使用済みです。");
-      //ここに返信を作る
     }
     res.sendStatus(200);
   } catch (error) {
@@ -175,3 +146,6 @@ app.delete("/webhook", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// ルーターをエクスポート
+module.exports = router;
