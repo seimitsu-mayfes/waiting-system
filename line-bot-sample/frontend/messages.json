@@ -104,6 +104,74 @@
         ]
       }
     },
+    "reservationCompleteMessage": {
+        "type": "flex",
+        "altText": "整理券が発行されました。",
+        "contents": {
+          "type": "bubble",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "** さんの",
+                "weight": "bold",
+                "size": "md",
+                "align": "center"
+              },
+              {
+                "type": "text",
+                "text": "整理券が発行されました",
+                "size": "sm",
+                "align": "center"
+              },
+              {
+                "type": "text",
+                "text": "整理券番号：1234",
+                "weight": "bold",
+                "size": "lg",
+                "align": "center",
+                "color": "#FF0000"
+              },
+              {
+                "type": "text",
+                "text": "推定待ち時間は",
+                "size": "sm",
+                "align": "center"
+              },
+              {
+                "type": "text",
+                "text": "75",
+                "weight": "bold",
+                "size": "3xl",
+                "align": "center"
+              },
+              {
+                "type": "text",
+                "text": "分です。",
+                "size": "sm",
+                "align": "center"
+              }
+            ]
+          },
+          "footer": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "button",
+                "action": {
+                  "type": "message",
+                  "label": "キャンセル",
+                  "text": "整理券をキャンセルします"
+                },
+                "style": "secondary"
+              }
+            ]
+          }
+        }  
+    },
     "waitingTimeMessage": {
         "type": "flex",
         "altText": "待ち時間をお知らせします",
@@ -131,7 +199,7 @@
                 "contents": [
                 {
                     "type": "text",
-                    "text": "吉田大靖 さん",
+                    "text": "** さん",
                     "align": "center",
                     "wrap": true,
                     "size": "xl",
@@ -162,7 +230,115 @@
             }
         ]
         }
+    },
+    "rankingMessage": {
+      "type": "flex",
+      "altText": "特典ランキングに参加しますか？",
+      "contents": {
+        "type": "bubble",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "特典ランキングに参加しますか？",
+              "weight": "bold",
+              "size": "xl",
+              "align": "center",
+              "wrap": true
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "message",
+                "label": "はい",
+                "text": "特典ランキングに参加します"
+              },
+              "style": "primary"
+            },
+            {
+              "type": "button",
+              "action": {
+                "type": "message",
+                "label": "いいえ",
+                "text": "特典ランキングに参加しません"
+              },
+              "style": "secondary"
+            }
+          ]
+        }
+      }
+    },
+    "useTicketMessage": {
+      "type": "flex",
+      "altText": "整理券を使用しますか？",
+      "contents": {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "none",
+          "contents": [
+            {
+              "type": "text",
+              "text": "VR玉入れ",
+              "weight": "bold",
+              "size": "xl",
+              "align": "center"
+            }
+          ]
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "paddingTop": "none",
+          "contents": [
+            {
+              "type": "text",
+              "text": "** さん",
+              "size": "lg",
+              "align": "center"
+            },
+            {
+              "type": "text",
+              "text": "の整理券を使用しますか？",
+              "size": "md",
+              "align": "center"
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "button",
+              "style": "primary",
+              "action": {
+                "type": "message",
+                "label": "はい",
+                "text": "はい"
+              }
+            },
+            {
+              "type": "button",
+              "style": "secondary",
+              "action": {
+                "type": "message",
+                "label": "いいえ",
+                "text": "いいえ"
+              }
+            }
+          ]
+        }
+      }
     }
-      
 }
   
