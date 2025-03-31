@@ -1,7 +1,7 @@
 const request = require("supertest");
 const express = require("express");
 const dotenv = require("dotenv");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../generated/prisma_client");
 const presentationRoutes = require("../presentation/reservation");
 
 // 環境変数の読み込み
@@ -17,7 +17,9 @@ const prisma = new PrismaClient();
 
 // axiosのモック
 jest.mock("axios", () => ({
-  get: jest.fn(() => Promise.resolve({ data: { userId: "123", displayName: "Test User" } })),
+  get: jest.fn(() =>
+    Promise.resolve({ data: { userId: "123", displayName: "Test User" } })
+  ),
 }));
 
 describe("POST /webhook", () => {
@@ -38,8 +40,8 @@ describe("POST /webhook", () => {
         displayName: "Test User",
         language: "ja",
         pictureUrl: "",
-        statusMessage: ""
-      }
+        statusMessage: "",
+      },
     });
     await prisma.callNumber.upsert({
       where: { id: 1 },
@@ -50,12 +52,14 @@ describe("POST /webhook", () => {
     const response = await request(app)
       .post("/webhook")
       .send({
-        events: [{
-          type: "message",
-          message: { text: "待ち時間を確認" },
-          source: { userId: "123" },
-          replyToken: "token"
-        }]
+        events: [
+          {
+            type: "message",
+            message: { text: "待ち時間を確認" },
+            source: { userId: "123" },
+            replyToken: "token",
+          },
+        ],
       });
 
     expect(response.status).toBe(200);
@@ -66,18 +70,20 @@ describe("POST /webhook", () => {
     const response = await request(app)
       .post("/webhook")
       .send({
-        events: [{
-          type: "message",
-          message: { text: "整理券を発行" },
-          source: { userId: "123" },
-          replyToken: "token"
-        }]
+        events: [
+          {
+            type: "message",
+            message: { text: "整理券を発行" },
+            source: { userId: "123" },
+            replyToken: "token",
+          },
+        ],
       });
 
     expect(response.status).toBe(200);
-    
+
     const profile = await prisma.profile.findUnique({
-      where: { userId: "123" }
+      where: { userId: "123" },
     });
     expect(profile).not.toBeNull();
   });

@@ -1,5 +1,5 @@
 const profileUseCase = require("../usecase/profileUseCase.js");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../generated/prisma_client");
 
 const prisma = new PrismaClient();
 

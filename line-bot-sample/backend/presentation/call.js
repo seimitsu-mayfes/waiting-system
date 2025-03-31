@@ -1,5 +1,5 @@
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../generated/prisma_client");
 const dotenv = require("dotenv");
 const messageUseCase = require("../usecase/messageUseCase");
 const reservationUseCase = require("../usecase/reservationUseCase"); // reservationUseCase をインポート

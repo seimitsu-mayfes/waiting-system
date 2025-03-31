@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../generated/prisma_client");
 
 const reservationUseCase = require("../usecase/reservationUseCase.js");
 

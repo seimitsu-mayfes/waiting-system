@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const https = require("https");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../generated/prisma_client");
 
 // Prismaのインスタンスを生成
 const prisma = new PrismaClient();

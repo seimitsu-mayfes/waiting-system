@@ -1,5 +1,5 @@
 const reservationUseCase = require("../usecase/reservationUseCase.js");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../generated/prisma_client");
 
 const prisma = new PrismaClient();
 
@@ -12,8 +12,8 @@ describe("reservationUseCase", () => {
         displayName: "Test User",
         language: "ja",
         pictureUrl: "",
-        statusMessage: ""
-      }
+        statusMessage: "",
+      },
     });
     await prisma.callNumber.upsert({
       where: { id: 1 },
