@@ -31,4 +31,5 @@ model CallNumber {
 model CallHistory {
   id                  Int      @id @default(autoincrement()) // ID は自動的にインクリメント
   callNumber          Int                                   // 呼出番号
-  calledAt            DateTime @defau
+  calledAt            DateTime @default(now())              // 呼出時間
+}
