@@ -1,0 +1,35 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // DATABASE_URL は .env ファイルで設定される
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma_client"
+}
+
+model Profile {
+  id                Int      @id @default(autoincrement()) // ID は自動的にインクリメント
+  reservationNumber Int      @unique // 整理券番号（ユニークな値）
+  displayName       String // LINE display name
+  userId            String   @unique // LINE userId（ユニークな値）
+  language          String // 言語（例：en）
+  pictureUrl        String // プロフィール画像のURL
+  statusMessage     String // ステータスメッセージ
+  createdAt         DateTime @default(now()) // 作成日
+  updatedAt         DateTime @updatedAt // 更新日
+  validity          Boolean  @default(true) // デフォルトは有効
+}
+
+model CallNumber {
+  id        Int      @id @default(1) // 常に1つのレコードのみを扱う
+  number    Int      @default(1) // 呼出番号、初期値は1
+  updatedAt DateTime @updatedAt // 更新日
+}
+
+model CallHistory {
+  id         Int      @id @default(autoincrement()) // ID は自動的にインクリメント
+  callNumber Int // 呼出番号
+  calledAt   DateTime @default(now()) // 呼出時間
+}

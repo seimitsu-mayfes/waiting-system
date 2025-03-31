@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js",
+    "db:deploy": "npx prisma migrate deploy && npx prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -13,12 +15,12 @@
     "@line/bot-sdk": "^9.5.0",
     "@prisma/client": "^6.2.1",
     "dotenv": "^16.4.7",
-    "express": "^4.21.1",
-    "pg": "^8.13.1",
-    "prisma": "^6.2.1"
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "prisma": "^6.5.0",
     "supertest": "^7.0.0"
   }
 }

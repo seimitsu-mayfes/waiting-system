@@ -1,6 +1,11 @@
-FROM node:latest
-WORKDIR /workspace/line-bot-sample/backend
+FROM node:lts-alpine3.17
+
+WORKDIR /usr/src/app
+
 COPY package.json package-lock.json ./
-RUN npm install
-RUN apt-get update && apt-get install -y postgresql-client netcat-openbsd
-CMD ["node", "server.js"]
+
+RUN npm ci
+
+COPY . .
+
+CMD ["sh", "-c", "npm run db:deploy && npm run dev"]

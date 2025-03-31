@@ -2,7 +2,7 @@
   "name": "LineBot Backend Container",
   "dockerComposeFile": "../../line-bot-sample/backend/docker-compose.yml",
   "service": "backend",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/usr/src/app",
   "customizations": {
     "vscode": {
       "extensions": ["github.copilot", "Prisma.prisma"]
